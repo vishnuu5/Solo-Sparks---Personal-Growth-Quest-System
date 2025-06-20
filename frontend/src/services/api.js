@@ -6,7 +6,7 @@ const API_BASE_URL =
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000, // 10 seconds timeout
+  timeout: 10000,
 });
 
 // Request interceptor to add auth token
@@ -50,10 +50,10 @@ api.interceptors.response.use(
       // Service unavailable - database not connected
       toast.error("Service temporarily unavailable. Please try again later.");
     } else if (error.code === "ECONNABORTED") {
-      // Timeout error
+    
       toast.error("Request timeout. Please check your connection.");
     } else if (!error.response) {
-      // Network error
+    
       toast.error("Network error. Please check your connection.");
     }
 
