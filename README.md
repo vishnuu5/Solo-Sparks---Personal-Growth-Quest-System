@@ -2,6 +2,9 @@
 
 Solo Sparks is a comprehensive self-discovery application that helps users build emotional intelligence and self-awareness through personalized activities. The system analyzes user profiles, moods, and past behaviors to suggest meaningful solo activities, tracks completion through multimedia reflections, and implements a points-based reward system.
 
+## DEMO-----
+Check Link===>>>>>>>>>[Click](https://solo-sparks-personal-growth-quest-s.vercel.app)
+
 ## 🌟 Features
 
 ### Core Features
