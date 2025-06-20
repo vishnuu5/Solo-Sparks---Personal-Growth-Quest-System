@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import { TrendingUp, Calendar, Target, Heart, Award, Sparkles } from "lucide-react"
