@@ -9,11 +9,23 @@ const router = express.Router();
 router.put(
   "/psychology",
   [
-    body("personalityTraits").optional().isArray(),
-    body("emotionalNeeds").optional().isArray(),
-    body("interests").optional().isArray(),
-    body("goals").optional().isArray(),
-    body("currentMood").optional().isString(),
+    body("personalityTraits")
+      .optional()
+      .isArray()
+      .withMessage("Personality traits must be an array"),
+    body("emotionalNeeds")
+      .optional()
+      .isArray()
+      .withMessage("Emotional needs must be an array"),
+    body("interests")
+      .optional()
+      .isArray()
+      .withMessage("Interests must be an array"),
+    body("goals").optional().isArray().withMessage("Goals must be an array"),
+    body("currentMood")
+      .optional()
+      .isString()
+      .withMessage("Current mood must be a string"),
   ],
   async (req, res) => {
     try {
@@ -21,6 +33,9 @@ router.put(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
+
+      console.log("Updating psychology profile for user:", req.user._id);
+      console.log("Profile data received:", req.body);
 
       const updates = req.body;
       const user = await User.findByIdAndUpdate(
@@ -34,11 +49,14 @@ router.put(
         { new: true, runValidators: true }
       ).select("-password");
 
+      console.log("Updated user:", user);
+
       res.json({
         message: "Psychology profile updated successfully",
         user,
       });
     } catch (error) {
+      console.error("Psychology profile update error:", error);
       res.status(500).json({ message: "Server error", error: error.message });
     }
   }

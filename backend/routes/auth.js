@@ -154,6 +154,10 @@ router.put(
       .optional()
       .isLength({ max: 500 })
       .withMessage("Bio must be less than 500 characters"),
+    body("personalityTraits").optional().isArray(),
+    body("emotionalNeeds").optional().isArray(),
+    body("interests").optional().isArray(),
+    body("goals").optional().isArray(),
   ],
   async (req, res) => {
     try {
@@ -162,6 +166,9 @@ router.put(
         return res.status(400).json({ errors: errors.array() });
       }
 
+      console.log("Updating profile for user:", req.user._id);
+      console.log("Profile updates:", req.body);
+
       const updates = req.body;
       const user = await User.findByIdAndUpdate(
         req.user._id,
@@ -169,11 +176,14 @@ router.put(
         { new: true, runValidators: true }
       ).select("-password");
 
+      console.log("Profile updated successfully:", user);
+
       res.json({
         message: "Profile updated successfully",
         user,
       });
     } catch (error) {
+      console.error("Profile update error:", error);
       res.status(500).json({ message: "Server error", error: error.message });
     }
   }

@@ -4,8 +4,9 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useQuest } from "../context/QuestContext"
-import { Sparkles, Target, Trophy, TrendingUp, Calendar, Heart } from "lucide-react"
+import { Sparkles, Target, Trophy, TrendingUp, Calendar, Heart, AlertCircle } from "lucide-react"
 import { analyticsAPI } from "../services/api"
+import OnboardingButton from "../components/OnboardingButton"
 import toast from "react-hot-toast"
 
 const Dashboard = () => {
@@ -89,6 +90,24 @@ const Dashboard = () => {
                     <p className="text-gray-600 mt-2">Ready to continue your growth journey today?</p>
                 </div>
 
+                {/* Onboarding Alert */}
+                {!user?.onboardingCompleted && (
+                    <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                                <AlertCircle className="h-5 w-5 text-yellow-600" />
+                                <div>
+                                    <h3 className="text-sm font-medium text-yellow-800">Complete Your Profile Setup</h3>
+                                    <p className="text-sm text-yellow-700 mt-1">
+                                        Complete the onboarding process to unlock personalized quests and start your growth journey.
+                                    </p>
+                                </div>
+                            </div>
+                            <OnboardingButton />
+                        </div>
+                    </div>
+                )}
+
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="card">
@@ -152,7 +171,16 @@ const Dashboard = () => {
                                 </div>
                             </div>
 
-                            {currentQuest ? (
+                            {!user?.onboardingCompleted ? (
+                                <div className="text-center py-8">
+                                    <AlertCircle className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
+                                    <h3 className="text-lg font-medium text-gray-900 mb-2">Complete Setup First</h3>
+                                    <p className="text-gray-600 mb-4">
+                                        Complete your profile setup to start receiving personalized quests.
+                                    </p>
+                                    <OnboardingButton />
+                                </div>
+                            ) : currentQuest ? (
                                 <div className="space-y-4">
                                     <div className="p-4 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-lg">
                                         <h3 className="font-semibold text-gray-900 mb-2">{currentQuest.title}</h3>
@@ -231,19 +259,45 @@ const Dashboard = () => {
                                     </div>
                                     <span className="font-medium text-gray-900">View Progress</span>
                                 </button>
+
+                                <button
+                                    onClick={() => navigate("/profile")}
+                                    className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-3"
+                                >
+                                    <div className="p-2 bg-purple-100 rounded-lg">
+                                        <Heart className="h-4 w-4 text-purple-600" />
+                                    </div>
+                                    <span className="font-medium text-gray-900">Edit Profile</span>
+                                </button>
                             </div>
                         </div>
 
-                        {/* Recent Achievement */}
+                        {/* Profile Status */}
                         <div className="card">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Achievement</h3>
-                            <div className="text-center py-4">
-                                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <Trophy className="h-8 w-8 text-yellow-600" />
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Status</h3>
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-600">Onboarding</span>
+                                    {user?.onboardingCompleted ? (
+                                        <span className="text-green-600 text-sm font-medium">✓ Complete</span>
+                                    ) : (
+                                        <span className="text-yellow-600 text-sm font-medium">⚠ Pending</span>
+                                    )}
                                 </div>
-                                <h4 className="font-medium text-gray-900">Self-Reflection Master</h4>
-                                <p className="text-sm text-gray-600 mt-1">Completed 5 reflection quests</p>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-600">Profile Data</span>
+                                    {user?.personalityTraits?.length > 0 ? (
+                                        <span className="text-green-600 text-sm font-medium">✓ Complete</span>
+                                    ) : (
+                                        <span className="text-gray-400 text-sm font-medium">○ Empty</span>
+                                    )}
+                                </div>
                             </div>
+                            {!user?.onboardingCompleted && (
+                                <div className="mt-4">
+                                    <OnboardingButton className="w-full justify-center" />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

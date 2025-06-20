@@ -67,11 +67,17 @@ const Onboarding = () => {
     const handleComplete = async () => {
         setLoading(true)
         try {
-            await profileAPI.updatePsychProfile(profileData)
-            updateUser({ onboardingCompleted: true })
+            console.log("Saving profile data:", profileData) // Debug log
+            const response = await profileAPI.updatePsychProfile(profileData)
+            console.log("Profile saved successfully:", response.data) // Debug log
+            updateUser({
+                onboardingCompleted: true,
+                ...response.data.user,
+            })
             toast.success("Profile setup complete! Welcome to Solo Sparks!")
             navigate("/dashboard")
         } catch (error) {
+            console.error("Profile save error:", error)
             toast.error("Failed to save profile. Please try again.")
         } finally {
             setLoading(false)
@@ -183,6 +189,7 @@ const PersonalityStep = ({ data, updateData }) => {
                     </button>
                 ))}
             </div>
+            <p className="text-sm text-gray-500 mt-2">Selected: {(data.personalityTraits || []).length} traits</p>
         </div>
     )
 }
