@@ -6,12 +6,10 @@ import { authMiddleware } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Generate JWT token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
-// Register
 router.post(
   "/register",
   [
@@ -32,16 +30,12 @@ router.post(
       }
 
       const { name, email, password } = req.body;
-
-      // Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res
           .status(400)
           .json({ message: "User already exists with this email" });
       }
-
-      // Create new user
       const user = new User({ name, email, password });
       await user.save();
 
@@ -65,7 +59,6 @@ router.post(
   }
 );
 
-// Login
 router.post(
   "/login",
   [
@@ -81,7 +74,6 @@ router.post(
 
       const { email, password } = req.body;
 
-      // Find user
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(400).json({ message: "Invalid credentials" });
