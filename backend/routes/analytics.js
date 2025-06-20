@@ -4,7 +4,6 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// Get user progress data
 router.get("/progress", async (req, res) => {
   try {
     const userId = req.user._id;
